@@ -1,0 +1,38 @@
+{
+  "name": "reacthookify",
+  "version": "1.0.0",
+  "description": "A collection of custom React hooks for efficient state management and UI logic.",
+  "main": "src/index.js",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/reacthookify.git"
+  },
+  "keywords": [
+    "react",
+    "hooks",
+    "custom-hooks",
+    "react-library",
+    "state-management",
+    "reusable-hooks",
+    "ui-logic"
+  ],
+  "author": "Yuvraj Karna",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "test": "jest",
+    "build": "echo 'No build step needed'",
+    "prepublishOnly": "npm test"
+  },
+  "files": [
+    "src"
+  ],
+  "dependencies": {
+    "react": "^16.14.0"
+  },
+  "devDependencies": {
+    "@testing-library/react-hooks": "^8.0.1",
+    "jest": "^29.7.0"
+  }
+}
