@@ -39,7 +39,7 @@
  * This hook is useful for scenarios where a UI element needs to be brought into view dynamically,
  * such as navigating to a specific section of a page or focusing on an error message.
  */
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 
 const useScrollIntoView = (
   ref,
@@ -70,6 +70,11 @@ const useScrollIntoView = (
     }
     setError(null);
     setHasScrolled(false);
+
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
     timeoutRef.current = setTimeout(() => {
       ref.current.scrollIntoView(options);
       setHasScrolled(true);
@@ -77,11 +82,13 @@ const useScrollIntoView = (
     }, delay);
   }, [validateRef, delay, options, onScrollComplete]);
 
+  const triggerDeps = useMemo(() => [...triggers], [triggers]);
+
   useEffect(() => {
     if (!triggers.some(Boolean)) return;
     scrollToElement();
     return () => clearTimeout(timeoutRef.current);
-  }, [triggers, scrollToElement]);
+  }, triggerDeps);
 
   return { hasScrolled, error, scrollToElement };
 };
