@@ -1,8 +1,7 @@
 {
-  "name": "reacthookify",
+  "name": "react-hook-granth",
   "version": "1.0.0",
   "description": "A collection of custom React hooks for efficient state management and UI logic.",
-  "main": "src/index.js",
   "type": "module",
   "repository": {
     "type": "git",
@@ -13,9 +12,9 @@
     "hooks",
     "custom-hooks",
     "react-library",
-    "state-management",
     "reusable-hooks",
-    "ui-logic"
+    "ui-logic",
+    "hook-granth"
   ],
   "author": "Yuvraj Karna",
   "license": "MIT",
