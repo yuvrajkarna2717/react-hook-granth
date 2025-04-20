@@ -14,7 +14,7 @@
     "react-library",
     "reusable-hooks",
     "ui-logic",
-    "hook-granth"
+    "react-hook-granth"
   ],
   "author": "Yuvraj Karna",
   "license": "MIT",
