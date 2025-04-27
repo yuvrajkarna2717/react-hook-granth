@@ -2,6 +2,12 @@
 
 A lightweight and easy-to-use collection of 15+ custom React hooks, designed to help you build efficient and scalable React applications. This package is built with JavaScript and comes with pre-written test scripts to ensure reliability.
 
+## Try it out
+
+You can try out the package by installing it from npm:
+
+[react-hook-granth on npm](https://www.npmjs.com/package/react-hook-granth)
+
 ## Features
 
 - **15+ Custom React Hooks**: A collection of useful hooks to manage state, effects, and more.

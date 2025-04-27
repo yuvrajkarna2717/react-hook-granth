@@ -5,12 +5,12 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/reacthookify.git"
+    "url": "https://github.com/yuvrajkarna2717/react-hook-granth"
   },
   "keywords": [
     "react",
     "hooks",
-    "custom-hooks",
+    "custom hooks",
     "react-library",
     "reusable-hooks",
     "ui-logic",
