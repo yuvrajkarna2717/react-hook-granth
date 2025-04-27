@@ -1,8 +1,8 @@
 import { renderHook, act } from "@testing-library/react-hooks";
 import { describe, test, expect, vi } from "vitest";
+import { waitFor } from "@testing-library/react";
 
 import useScrollIntoView from "../src/hooks/useScrollIntoView";
-import { waitFor } from "@testing-library/react";
 
 beforeAll(() => {
   window.HTMLElement.prototype.scrollIntoView = vi.fn();
