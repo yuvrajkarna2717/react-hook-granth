@@ -1,49 +1,51 @@
-# react-hook-granth: React Custom Hooks Library
 
-A lightweight and easy-to-use collection of 15+ custom React hooks, designed to help you build efficient and scalable React applications. This package is built with JavaScript and comes with pre-written test scripts to ensure reliability.
+<h1 align="center"> react-hook-granth</h1>
+<p align="center"><em>A modern, scalable library of 15+ reusable custom React hooks.</em></p>
 
-## Try it out
+<p align="center">
+  <a href="https://www.npmjs.com/package/react-hook-granth">
+    <img alt="npm version" src="https://img.shields.io/npm/v/react-hook-granth?color=blue&label=npm&logo=npm">
+  </a>
+  <a href="https://www.npmjs.com/package/react-hook-granth">
+    <img alt="npm downloads" src="https://img.shields.io/npm/dw/react-hook-granth?color=blueviolet">
+  </a>
+  <a href="https://www.npmjs.com/package/react-hook-granth">
+    <img alt="total downloads" src="https://img.shields.io/npm/dt/react-hook-granth">
+  </a>
+  <a href="./LICENSE">
+    <img alt="license" src="https://img.shields.io/npm/l/react-hook-granth">
+  </a>
+  <a href="https://www.npmjs.com/package/react-hook-granth">
+    <img alt="types" src="https://img.shields.io/npm/types/react-hook-granth?color=orange">
+  </a>
+</p>
 
-![version](https://img.shields.io/npm/v/react-hook-granth)
-![downloads](https://img.shields.io/npm/dw/react-hook-granth)
-![total](https://img.shields.io/npm/dt/react-hook-granth)
-![license](https://img.shields.io/npm/l/react-hook-granth)
-![types](https://img.shields.io/npm/types/react-hook-granth)
+---
 
-
-You can try out the package by installing it from npm:
-
-[react-hook-granth on npm](https://www.npmjs.com/package/react-hook-granth)
-
-## Features
-
-- **15+ Custom React Hooks**: A collection of useful hooks to manage state, effects, and more.
-- **Lightweight**: Minimal dependencies and a small footprint.
-- **Easy to Implement**: Quick setup with straightforward usage.
-- **Built with JavaScript**: No need for TypeScript to use, though it can easily be integrated.
-- **Pre-written Tests**: Ensure the reliability of each hook with included test scripts.
-- **Well-documented**: Clear documentation for each custom hook, along with usage examples.
-
-## Installation
-
-You can install this package via npm:
+## 📦 Install
 
 ```bash
 npm install react-hook-granth
-
-```
-
-Or if you are using Yarn:
-
-```bash
+# or
 yarn add react-hook-granth
-```
+````
 
-## Usage
+---
 
-Once installed, you can import the hooks from the library and start using them in your React components.
+## ✨ Why use react-hook-granth?
 
-```js
+* ✅ **15+ Custom Hooks** – State, debounce, storage, event listeners, and more
+* ⚡ **Lightweight & Performant** – Minimal dependencies, efficient execution
+* 🔧 **Plug & Play** – Simple APIs with zero config
+* 🧪 **Battle-tested** – Covered by [Vitest](https://vitest.dev) test suite
+* 🟨 **JS-first** – TypeScript optional
+* 📖 **Documented & Maintained** – Clean docs and actively improved
+
+---
+
+## ⚡ Quick Example
+
+```jsx
 import { useCounter } from 'react-hook-granth';
 
 const Counter = () => {
@@ -51,72 +53,92 @@ const Counter = () => {
 
   return (
     <div>
-      <h1>{count}</h1>
-      <button onClick={increment}>Increment</button>
-      <button onClick={decrement}>Decrement</button>
-      <button onClick={reset}>Reset</button>
+      <h2>{count}</h2>
+      <button onClick={increment}>➕</button>
+      <button onClick={decrement}>➖</button>
+      <button onClick={reset}>🔄</button>
     </div>
   );
 };
 ```
 
-## Available Hooks
+---
 
-Here’s a list of the hooks available in this package:
+## 📚 Included Hooks
 
-- `useCounter`
-- `useLocalStorage`
-- `usePrevious`
-- `useDebounce`
-- `useEventListener`
-- `useWindowSize`
-- And many more...
+Here’s a peek into the powerful hooks you'll get:
 
-## Running Tests
+| Hook Name          | Description                              |
+| ------------------ | ---------------------------------------- |
+| `useCounter`       | Manage counters with increment/decrement |
+| `useLocalStorage`  | Persist state in localStorage            |
+| `usePrevious`      | Track previous value of a state/prop     |
+| `useDebounce`      | Debounce changing values or inputs       |
+| `useEventListener` | Attach event listeners to any element    |
+| `useWindowSize`    | Listen for window dimension changes      |
+| *...and more!*     | Additional hooks added regularly 🎯      |
 
-This package comes with pre-written test scripts to ensure each hook works as expected. To run the tests, use the following command:
+---
+
+## 🧪 Run Tests
 
 ```bash
 npm test
 ```
 
-This will run the test suite using [Vitest](https://vitest.dev/), the testing framework used in this package.
-
-## Contributing
-
-We welcome contributions! Feel free to open issues or submit pull requests with improvements, bug fixes, or additional hooks.
-
-To contribute:
-
-1. Fork the repository.
-2. Clone your fork and create a new branch.
-3. Make your changes and write tests for new functionality.
-4. Submit a pull request with a description of the changes.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This runs the unit tests with [Vitest](https://vitest.dev) to ensure hooks work reliably.
 
 ---
 
-## Contact
+## 🤝 Contribute
 
-- **Author**: [Yuvraj Karna](https://linkedin.com/in/yuvrajkarna27)
-- **Personal Website**: [Visit](https://yuvraj-karna.vercel.app)
-- **Email**: yuvrajkarna.code@gmail.com
+We 💙 contributions! Whether it's fixing a bug, adding a new hook, or improving docs — you're welcome to contribute.
 
-For questions, feel free to reach out or open an issue in the repository.
+### 🔧 Steps:
 
-### Key Sections:
+1. **Fork** this repo
+2. **Clone** it locally
+3. Create a branch: `git checkout -b feature/my-new-hook`
+4. Make changes + write tests
+5. Commit and push
+6. Submit a **Pull Request**
 
-1. **Features**: Highlights the main benefits of the package (15+ hooks, lightweight, easy to implement).
-2. **Installation**: Instructions on how to install the package using npm or Yarn.
-3. **Usage**: A simple example showing how to use the hooks.
-4. **Available Hooks**: A list of hooks that are part of the library (expandable with your specific hooks).
-5. **Running Tests**: Information about the test script and how to run them using Vitest.
-6. **Contributing**: A section for developers who want to contribute to the package.
-7. **License**: License information.
+---
 
-Feel free to update the sections as needed, such as adding specific details for each custom hook and personal contact details.
+## 📄 License
 
-```
+MIT © [Yuvraj Karna](https://linkedin.com/in/yuvrajkarna27)
+
+---
+
+## 👤 Author
+
+<div align="left">
+  <strong>Yuvraj Karna</strong><br />
+  🔗 <a href="https://linkedin.com/in/yuvrajkarna27">LinkedIn</a><br />
+  🌐 <a href="https://yuvraj-karna.vercel.app">Portfolio</a><br />
+  📧 <a href="mailto:yuvrajkarna.code@gmail.com">yuvrajkarna.code@gmail.com</a>
+</div>
+
+---
+
+## ⭐️ Show your support
+
+If you find this library helpful, give it a ⭐️ on [GitHub](https://github.com/your-repo)!
+
+---
+
+> Built with ❤️ to save you time and lines of code.
+
+
+### ✅ Highlights of the new version:
+- GitHub-compatible with modern HTML + Markdown styling.
+- Clean layout with emoji tags and headers.
+- Organized tables and sections for maximum readability.
+- Attractive badges and author section.
+
+If you want to:
+- Add a demo site (Storybook, Docusaurus)
+- Include animated hook usage previews
+- Set up GitHub Actions for tests + npm auto-publish
+
