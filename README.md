@@ -4,6 +4,13 @@ A lightweight and easy-to-use collection of 15+ custom React hooks, designed to 
 
 ## Try it out
 
+![version](https://img.shields.io/npm/v/react-hook-granth)
+![downloads](https://img.shields.io/npm/dw/react-hook-granth)
+![total](https://img.shields.io/npm/dt/react-hook-granth)
+![license](https://img.shields.io/npm/l/react-hook-granth)
+![types](https://img.shields.io/npm/types/react-hook-granth)
+
+
 You can try out the package by installing it from npm:
 
 [react-hook-granth on npm](https://www.npmjs.com/package/react-hook-granth)
