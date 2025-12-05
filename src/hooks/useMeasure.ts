@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 
 interface Bounds {
   width: number;
@@ -22,8 +22,8 @@ export default function useMeasure(): [React.RefObject<HTMLElement>, Bounds] {
 
   useLayoutEffect(() => {
     measure();
-    window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
   }, [measure]);
 
   return [ref, bounds];

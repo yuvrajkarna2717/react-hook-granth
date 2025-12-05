@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 /**
  * Custom hook to match a CSS media query.
@@ -17,17 +17,18 @@ export default function useMediaQuery(query: string): boolean {
     if (typeof window === 'undefined') {
       return;
     }
-    
+
     const mediaQueryList = window.matchMedia(query);
 
-    const listener = (event: MediaQueryListEvent): void => setMatches(event.matches);
-    mediaQueryList.addEventListener("change", listener);
+    const listener = (event: MediaQueryListEvent): void =>
+      setMatches(event.matches);
+    mediaQueryList.addEventListener('change', listener);
 
     // Initial check
     setMatches(mediaQueryList.matches);
 
     return () => {
-      mediaQueryList.removeEventListener("change", listener);
+      mediaQueryList.removeEventListener('change', listener);
     };
   }, [query]);
 

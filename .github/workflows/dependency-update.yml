@@ -1,0 +1,36 @@
+name: Dependency Updates
+
+on:
+  schedule:
+    - cron: '0 0 * * 1' # Weekly on Monday
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      
+      - name: Update dependencies
+        run: |
+          npm install --legacy-peer-deps
+          npm update
+          npm audit fix --audit-level moderate
+      
+      - name: Create PR
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'chore: update dependencies'
+          title: 'chore: automated dependency updates'
+          body: |
+            Automated dependency updates
+            - Updated npm packages to latest versions
+            - Fixed security vulnerabilities
+          branch: chore/dependency-updates

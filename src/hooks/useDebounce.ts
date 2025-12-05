@@ -1,5 +1,5 @@
 // src/hooks/useDebounce.ts
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback } from 'react';
 
 interface UseDebounceOptions {
   leading?: boolean;
@@ -52,13 +52,13 @@ export default function useDebounce<T>(
   const updateValue = useCallback(
     (
       newValue: T,
-      source: "debounce" | "flush" | "leading" | "maxwait" = "debounce"
+      source: 'debounce' | 'flush' | 'leading' | 'maxwait' = 'debounce'
     ) => {
       setDebouncedValue(newValue);
       setIsPending(false);
       clearTimeouts();
 
-      if (source === "debounce" || source === "maxwait") {
+      if (source === 'debounce' || source === 'maxwait') {
         onDebounce?.(newValue);
       }
 
@@ -79,7 +79,7 @@ export default function useDebounce<T>(
 
   const flush = useCallback(() => {
     if (isPending && timeoutRef.current) {
-      updateValue(value, "flush");
+      updateValue(value, 'flush');
     }
   }, [isPending, value, updateValue]);
 
@@ -123,7 +123,7 @@ export default function useDebounce<T>(
     // Set up trailing edge execution
     if (trailing) {
       timeoutRef.current = setTimeout(() => {
-        updateValue(value, "debounce");
+        updateValue(value, 'debounce');
       }, delay);
     }
 
@@ -134,12 +134,12 @@ export default function useDebounce<T>(
 
       if (remainingMaxWait <= 0) {
         // MaxWait time has already passed, execute immediately
-        updateValue(value, "maxwait");
+        updateValue(value, 'maxwait');
         return;
       }
 
       maxTimeoutRef.current = setTimeout(() => {
-        updateValue(value, "maxwait");
+        updateValue(value, 'maxwait');
       }, remainingMaxWait);
     }
   }, [value, delay, leading, trailing, maxWait, updateValue]);

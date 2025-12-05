@@ -1,8 +1,8 @@
-import { renderHook, act } from "@testing-library/react-hooks";
-import { describe, test, expect, vi } from "vitest";
-import { waitFor } from "@testing-library/react";
+import { renderHook, act } from '@testing-library/react';
+import { describe, test, expect, vi } from 'vitest';
+import { waitFor } from '@testing-library/react';
 
-import useScrollIntoView from "../hooks/useScrollIntoView";
+import useScrollIntoView from '../hooks/useScrollIntoView';
 
 beforeAll(() => {
   window.HTMLElement.prototype.scrollIntoView = vi.fn();
@@ -12,8 +12,8 @@ afterEach(() => {
   vi.clearAllMocks();
 });
 
-describe("useScrollIntoView Hook", () => {
-  test("should not scroll if ref is invalid", () => {
+describe('useScrollIntoView Hook', () => {
+  test('should not scroll if ref is invalid', () => {
     vi.useFakeTimers();
     const { result } = renderHook(() => useScrollIntoView(null, [], 100));
 
@@ -21,7 +21,7 @@ describe("useScrollIntoView Hook", () => {
 
     waitFor(() => {
       expect(result.current.error).toEqual({
-        message: "Invalid ref provided or element not found.",
+        message: 'Invalid ref provided or element not found.',
       });
     });
     expect(result.current.hasScrolled).toBe(false);
@@ -29,10 +29,10 @@ describe("useScrollIntoView Hook", () => {
     vi.useRealTimers();
   });
 
-  test("should scroll when a trigger changes", async () => {
+  test('should scroll when a trigger changes', async () => {
     vi.useFakeTimers();
 
-    const ref = { current: document.createElement("div") };
+    const ref = { current: document.createElement('div') };
     const { result, rerender } = renderHook(
       ({ triggers }) => useScrollIntoView(ref, triggers, 100),
       { initialProps: { triggers: [false] } }
@@ -52,10 +52,10 @@ describe("useScrollIntoView Hook", () => {
     vi.useRealTimers();
   });
 
-  test("should manually scroll when scrollToElement is called", () => {
+  test('should manually scroll when scrollToElement is called', () => {
     vi.useFakeTimers();
 
-    const ref = { current: document.createElement("div") };
+    const ref = { current: document.createElement('div') };
     const { result } = renderHook(() => useScrollIntoView(ref, [], 100));
 
     act(() => {
@@ -68,10 +68,10 @@ describe("useScrollIntoView Hook", () => {
     vi.useRealTimers();
   });
 
-  test("should execute onScrollComplete callback after scrolling", async () => {
+  test('should execute onScrollComplete callback after scrolling', async () => {
     vi.useFakeTimers();
 
-    const ref = { current: document.createElement("div") };
+    const ref = { current: document.createElement('div') };
     const onScrollComplete = vi.fn();
 
     const { result } = renderHook(() =>

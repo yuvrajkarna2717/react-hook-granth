@@ -1,4 +1,4 @@
-import { renderHook, act } from '@testing-library/react-hooks';
+import { renderHook, act } from '@testing-library/react';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import useLocalStorage from '../hooks/useLocalStorage';
 
@@ -21,23 +21,25 @@ describe('useLocalStorage', () => {
 
   it('should update localStorage when value changes', () => {
     const { result } = renderHook(() => useLocalStorage('test-key', 'initial'));
-    
+
     act(() => {
       result.current[1]('new-value');
     });
-    
+
     expect(localStorage.getItem('test-key')).toBe('"new-value"');
     expect(result.current[0]).toBe('new-value');
   });
 
   it('should handle objects', () => {
     const initialObj = { name: 'test' };
-    const { result } = renderHook(() => useLocalStorage('test-key', initialObj));
-    
+    const { result } = renderHook(() =>
+      useLocalStorage('test-key', initialObj)
+    );
+
     act(() => {
       result.current[1]({ name: 'updated' });
     });
-    
+
     expect(result.current[0]).toEqual({ name: 'updated' });
   });
 });

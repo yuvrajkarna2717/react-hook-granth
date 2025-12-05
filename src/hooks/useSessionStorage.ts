@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 /**
  * Sync state with sessionStorage.
@@ -6,7 +6,10 @@ import { useEffect, useState } from "react";
  * @param initialValue - Initial value
  * @returns Tuple of [value, setValue]
  */
-export default function useSessionStorage<T>(key: string, initialValue: T): [T, (value: T) => void] {
+export default function useSessionStorage<T>(
+  key: string,
+  initialValue: T
+): [T, (value: T) => void] {
   const getValue = (): T => {
     const stored = sessionStorage.getItem(key);
     return stored ? JSON.parse(stored) : initialValue;

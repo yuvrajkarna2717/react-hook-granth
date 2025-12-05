@@ -39,8 +39,9 @@
     "lint:fix": "eslint src --ext .ts,.tsx --fix",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
-    "check": "npm run lint && npm run format:check && npm run test",
-    "fix": "npm run lint:fix && npm run format"
+    "check": "npm run lint && npm run format:check && npm test",
+    "fix": "npm run lint:fix && npm run format",
+    "type-check": "tsc --noEmit"
   },
   "files": [
     "dist",
@@ -52,26 +53,27 @@
     "react-dom": ">=16.8.0"
   },
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "^15.2.3",
-    "@rollup/plugin-typescript": "^11.1.5",
+    "@rollup/plugin-node-resolve": "^15.3.0",
+    "@rollup/plugin-typescript": "^12.1.1",
     "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/react": "^14.0.0",
-
-    "@types/react": "^18.2.45",
+    "@testing-library/react": "^16.0.1",
+    "@testing-library/dom": "^10.4.0",
+    "@types/react": "^18.3.27",
+    "@types/react-dom": "^18.3.7",
     "jsdom": "^26.0.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "rimraf": "^5.0.5",
-    "rollup": "^4.9.1",
-    "rollup-plugin-dts": "^6.1.0",
-    "tslib": "^2.6.2",
-    "typescript": "^5.3.3",
-    "vitest": "^3.0.6",
-    "@typescript-eslint/eslint-plugin": "^6.15.0",
-    "@typescript-eslint/parser": "^6.15.0",
-    "eslint": "^8.56.0",
-    "eslint-plugin-react": "^7.33.2",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "prettier": "^3.1.1"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "rimraf": "^6.0.1",
+    "rollup": "^4.28.1",
+    "rollup-plugin-dts": "^6.1.1",
+    "tslib": "^2.8.1",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8",
+    "@typescript-eslint/eslint-plugin": "^8.18.1",
+    "@typescript-eslint/parser": "^8.18.1",
+    "eslint": "^9.17.0",
+    "eslint-plugin-react": "^7.37.2",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "prettier": "^3.4.2"
   }
 }

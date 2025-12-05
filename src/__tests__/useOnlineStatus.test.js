@@ -1,4 +1,4 @@
-import { renderHook, act } from '@testing-library/react-hooks';
+import { renderHook, act } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import useOnlineStatus from '../hooks/useOnlineStatus';
 
@@ -7,7 +7,7 @@ describe('useOnlineStatus', () => {
     // Mock navigator.onLine
     Object.defineProperty(navigator, 'onLine', {
       writable: true,
-      value: true
+      value: true,
     });
   });
 
@@ -19,7 +19,7 @@ describe('useOnlineStatus', () => {
   it('should return false when offline', () => {
     Object.defineProperty(navigator, 'onLine', {
       writable: true,
-      value: false
+      value: false,
     });
 
     const { result } = renderHook(() => useOnlineStatus());
@@ -28,7 +28,7 @@ describe('useOnlineStatus', () => {
 
   it('should update status on online/offline events', () => {
     const { result } = renderHook(() => useOnlineStatus());
-    
+
     expect(result.current).toBe(true);
 
     act(() => {
@@ -48,7 +48,13 @@ describe('useOnlineStatus', () => {
 
     unmount();
 
-    expect(removeEventListenerSpy).toHaveBeenCalledWith('online', expect.any(Function));
-    expect(removeEventListenerSpy).toHaveBeenCalledWith('offline', expect.any(Function));
+    expect(removeEventListenerSpy).toHaveBeenCalledWith(
+      'online',
+      expect.any(Function)
+    );
+    expect(removeEventListenerSpy).toHaveBeenCalledWith(
+      'offline',
+      expect.any(Function)
+    );
   });
 });

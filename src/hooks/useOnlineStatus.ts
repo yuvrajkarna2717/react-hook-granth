@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 /**
  * Custom hook to track online/offline status.
@@ -20,13 +20,13 @@ export default function useOnlineStatus(): boolean {
     const goOnline = (): void => setIsOnline(true);
     const goOffline = (): void => setIsOnline(false);
 
-    window.addEventListener("online", goOnline);
-    window.addEventListener("offline", goOffline);
+    window.addEventListener('online', goOnline);
+    window.addEventListener('offline', goOffline);
 
     // Clean up
     return () => {
-      window.removeEventListener("online", goOnline);
-      window.removeEventListener("offline", goOffline);
+      window.removeEventListener('online', goOnline);
+      window.removeEventListener('offline', goOffline);
     };
   }, []);
 

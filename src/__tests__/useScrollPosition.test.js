@@ -1,4 +1,4 @@
-import { renderHook, act } from '@testing-library/react-hooks';
+import { renderHook, act } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import useScrollPosition from '../hooks/useScrollPosition';
 
@@ -32,6 +32,9 @@ describe('useScrollPosition', () => {
 
     unmount();
 
-    expect(removeEventListenerSpy).toHaveBeenCalledWith('scroll', expect.any(Function));
+    expect(removeEventListenerSpy).toHaveBeenCalledWith(
+      'scroll',
+      expect.any(Function)
+    );
   });
 });

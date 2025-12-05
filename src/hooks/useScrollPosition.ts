@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 interface ScrollPosition {
   x: number;
@@ -14,9 +14,9 @@ export default function useScrollPosition(): ScrollPosition {
     if (typeof window === 'undefined') {
       return { x: 0, y: 0 };
     }
-    return { 
-      x: window.scrollX, 
-      y: window.scrollY 
+    return {
+      x: window.scrollX,
+      y: window.scrollY,
     };
   });
 
@@ -29,9 +29,9 @@ export default function useScrollPosition(): ScrollPosition {
       setPosition({ x: window.scrollX, y: window.scrollY });
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll);
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 

@@ -1,12 +1,18 @@
-import { renderHook, act } from '@testing-library/react-hooks';
+import { renderHook, act } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import useWindowSize from '../hooks/useWindowSize';
 
 describe('useWindowSize', () => {
   beforeEach(() => {
     // Mock window dimensions
-    Object.defineProperty(window, 'innerWidth', { writable: true, value: 1024 });
-    Object.defineProperty(window, 'innerHeight', { writable: true, value: 768 });
+    Object.defineProperty(window, 'innerWidth', {
+      writable: true,
+      value: 1024,
+    });
+    Object.defineProperty(window, 'innerHeight', {
+      writable: true,
+      value: 768,
+    });
   });
 
   it('should return initial window size', () => {
@@ -32,6 +38,9 @@ describe('useWindowSize', () => {
 
     unmount();
 
-    expect(removeEventListenerSpy).toHaveBeenCalledWith('resize', expect.any(Function));
+    expect(removeEventListenerSpy).toHaveBeenCalledWith(
+      'resize',
+      expect.any(Function)
+    );
   });
 });

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 interface NetworkSpeed {
   connectionType: string;
@@ -11,7 +11,7 @@ interface NetworkSpeed {
  */
 export default function useNetworkSpeed(): NetworkSpeed {
   const [networkSpeed, setNetworkSpeed] = useState<NetworkSpeed>({
-    connectionType: "unknown",
+    connectionType: 'unknown',
     downlink: 0,
   });
 
@@ -24,12 +24,12 @@ export default function useNetworkSpeed(): NetworkSpeed {
     };
 
     updateNetworkSpeed(); // Initial update
-    window.addEventListener("online", updateNetworkSpeed);
-    window.addEventListener("offline", updateNetworkSpeed);
+    window.addEventListener('online', updateNetworkSpeed);
+    window.addEventListener('offline', updateNetworkSpeed);
 
     return () => {
-      window.removeEventListener("online", updateNetworkSpeed);
-      window.removeEventListener("offline", updateNetworkSpeed);
+      window.removeEventListener('online', updateNetworkSpeed);
+      window.removeEventListener('offline', updateNetworkSpeed);
     };
   }, []);
 

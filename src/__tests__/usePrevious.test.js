@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import usePrevious from '../hooks/usePrevious';
 
@@ -10,7 +10,7 @@ describe('usePrevious', () => {
 
   it('should return previous value after rerender', () => {
     const { result, rerender } = renderHook(({ value }) => usePrevious(value), {
-      initialProps: { value: 'first' }
+      initialProps: { value: 'first' },
     });
 
     expect(result.current).toBeUndefined();
@@ -24,7 +24,7 @@ describe('usePrevious', () => {
 
   it('should work with different data types', () => {
     const { result, rerender } = renderHook(({ value }) => usePrevious(value), {
-      initialProps: { value: 1 }
+      initialProps: { value: 1 },
     });
 
     rerender({ value: 2 });

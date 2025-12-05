@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import useMediaQuery from '../hooks/useMediaQuery';
 
@@ -7,7 +7,7 @@ describe('useMediaQuery', () => {
     // Mock matchMedia
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
-      value: vi.fn().mockImplementation(query => ({
+      value: vi.fn().mockImplementation((query) => ({
         matches: false,
         media: query,
         addEventListener: vi.fn(),
@@ -41,7 +41,7 @@ describe('useMediaQuery', () => {
   it('should add and remove event listeners', () => {
     const mockAddEventListener = vi.fn();
     const mockRemoveEventListener = vi.fn();
-    
+
     window.matchMedia.mockReturnValue({
       matches: false,
       addEventListener: mockAddEventListener,
@@ -49,10 +49,16 @@ describe('useMediaQuery', () => {
     });
 
     const { unmount } = renderHook(() => useMediaQuery('(min-width: 768px)'));
-    
-    expect(mockAddEventListener).toHaveBeenCalledWith('change', expect.any(Function));
-    
+
+    expect(mockAddEventListener).toHaveBeenCalledWith(
+      'change',
+      expect.any(Function)
+    );
+
     unmount();
-    expect(mockRemoveEventListener).toHaveBeenCalledWith('change', expect.any(Function));
+    expect(mockRemoveEventListener).toHaveBeenCalledWith(
+      'change',
+      expect.any(Function)
+    );
   });
 });

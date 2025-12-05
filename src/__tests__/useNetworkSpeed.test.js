@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import useNetworkSpeed from '../hooks/useNetworkSpeed';
 
@@ -9,8 +9,8 @@ describe('useNetworkSpeed', () => {
       writable: true,
       value: {
         effectiveType: '4g',
-        downlink: 10
-      }
+        downlink: 10,
+      },
     });
   });
 
@@ -18,20 +18,20 @@ describe('useNetworkSpeed', () => {
     const { result } = renderHook(() => useNetworkSpeed());
     expect(result.current).toEqual({
       connectionType: '4g',
-      downlink: 10
+      downlink: 10,
     });
   });
 
   it('should return unknown when connection API is not available', () => {
     Object.defineProperty(navigator, 'connection', {
       writable: true,
-      value: undefined
+      value: undefined,
     });
 
     const { result } = renderHook(() => useNetworkSpeed());
     expect(result.current).toEqual({
       connectionType: 'unknown',
-      downlink: 0
+      downlink: 0,
     });
   });
 
@@ -41,12 +41,24 @@ describe('useNetworkSpeed', () => {
 
     const { unmount } = renderHook(() => useNetworkSpeed());
 
-    expect(addEventListenerSpy).toHaveBeenCalledWith('online', expect.any(Function));
-    expect(addEventListenerSpy).toHaveBeenCalledWith('offline', expect.any(Function));
+    expect(addEventListenerSpy).toHaveBeenCalledWith(
+      'online',
+      expect.any(Function)
+    );
+    expect(addEventListenerSpy).toHaveBeenCalledWith(
+      'offline',
+      expect.any(Function)
+    );
 
     unmount();
 
-    expect(removeEventListenerSpy).toHaveBeenCalledWith('online', expect.any(Function));
-    expect(removeEventListenerSpy).toHaveBeenCalledWith('offline', expect.any(Function));
+    expect(removeEventListenerSpy).toHaveBeenCalledWith(
+      'online',
+      expect.any(Function)
+    );
+    expect(removeEventListenerSpy).toHaveBeenCalledWith(
+      'offline',
+      expect.any(Function)
+    );
   });
 });

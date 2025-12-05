@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 /**
  * Detect if user is idle after a given timeout.
@@ -17,7 +17,13 @@ export default function useIdle(timeout: number = 3000): boolean {
       timer = setTimeout(() => setIdle(true), timeout);
     };
 
-    const events = ["mousemove", "mousedown", "keydown", "scroll", "touchstart"];
+    const events = [
+      'mousemove',
+      'mousedown',
+      'keydown',
+      'scroll',
+      'touchstart',
+    ];
 
     events.forEach((e) => window.addEventListener(e, reset));
 

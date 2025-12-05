@@ -1,4 +1,4 @@
-import { renderHook, act } from '@testing-library/react-hooks';
+import { renderHook, act } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import useTimeout from '../hooks/useTimeout';
 
@@ -64,7 +64,7 @@ describe('useTimeout', () => {
   it('should update callback when it changes', () => {
     const mockCallback1 = vi.fn();
     const mockCallback2 = vi.fn();
-    
+
     const { rerender } = renderHook(
       ({ callback }) => useTimeout(callback, 1000),
       { initialProps: { callback: mockCallback1 } }

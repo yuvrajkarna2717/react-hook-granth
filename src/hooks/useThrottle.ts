@@ -1,4 +1,4 @@
-import { useCallback, useRef } from "react";
+import { useCallback, useRef } from 'react';
 
 /**
  * Throttle a function to only run once every specified delay.
@@ -7,7 +7,7 @@ import { useCallback, useRef } from "react";
  * @returns Throttled version of the callback
  */
 export default function useThrottle<T extends (...args: any[]) => any>(
-  callback: T, 
+  callback: T,
   delay: number
 ): (...args: Parameters<T>) => void {
   const lastCallRef = useRef<number>(0);
