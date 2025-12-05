@@ -9,7 +9,7 @@ export default function useIdle(timeout: number = 3000): boolean {
   const [idle, setIdle] = useState<boolean>(false);
 
   useEffect(() => {
-    let timer: NodeJS.Timeout | null = null;
+    let timer: number | null = null;
 
     const reset = (): void => {
       if (timer) clearTimeout(timer);

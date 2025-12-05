@@ -12,7 +12,7 @@ interface UseTimeoutReturn {
  * @returns Object with clear and reset functions
  */
 function useTimeout(callback: () => void, delay: number): UseTimeoutReturn {
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutRef = useRef<number | null>(null);
   const savedCallback = useRef<() => void>(callback);
 
   // Update the latest callback if it changes

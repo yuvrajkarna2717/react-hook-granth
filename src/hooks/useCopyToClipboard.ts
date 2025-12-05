@@ -22,7 +22,7 @@ function useCopyToClipboard(
 ): UseCopyToClipboardReturn {
   const { resetTime = 2000, onSuccess, onError } = options;
   const [isCopied, setIsCopied] = useState<boolean>(false);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutRef = useRef<number | null>(null);
 
   const reset = useCallback(() => {
     setIsCopied(false);

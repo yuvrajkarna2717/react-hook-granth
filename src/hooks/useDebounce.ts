@@ -32,8 +32,8 @@ export default function useDebounce<T>(
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
   const [isPending, setIsPending] = useState<boolean>(false);
 
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const maxTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutRef = useRef<number | null>(null);
+  const maxTimeoutRef = useRef<number | null>(null);
   const previousValueRef = useRef<T>(value);
   const leadingCalledRef = useRef<boolean>(false);
   const maxWaitStartTimeRef = useRef<number | null>(null); // Track when maxWait sequence started

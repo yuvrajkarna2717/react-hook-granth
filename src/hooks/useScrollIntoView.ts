@@ -53,7 +53,7 @@ const useScrollIntoView = <T extends HTMLElement = HTMLElement>(
 ): UseScrollIntoViewReturn => {
   const [hasScrolled, setHasScrolled] = useState<boolean>(false);
   const [error, setError] = useState<ScrollError | null>(null);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutRef = useRef<number | null>(null);
 
   const validateRef = useCallback((): ScrollError | null => {
     if (!ref || !ref.current) {
