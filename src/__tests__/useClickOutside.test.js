@@ -1,10 +1,10 @@
 // src/__tests__/useClickOutside.test.js
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { renderHook } from "@testing-library/react-hooks";
-import { fireEvent } from "@testing-library/react";
-import useClickOutside from "../hooks/useClickOutside";
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { renderHook } from '@testing-library/react';
+import { fireEvent } from '@testing-library/react';
+import useClickOutside from '../hooks/useClickOutside';
 
-describe("useClickOutside", () => {
+describe('useClickOutside', () => {
   let mockHandler;
   let targetElement;
   let outsideElement;
@@ -13,12 +13,12 @@ describe("useClickOutside", () => {
     mockHandler = vi.fn();
 
     // Create test elements
-    targetElement = document.createElement("div");
-    targetElement.setAttribute("data-testid", "inside-element");
+    targetElement = document.createElement('div');
+    targetElement.setAttribute('data-testid', 'inside-element');
     document.body.appendChild(targetElement);
 
-    outsideElement = document.createElement("div");
-    outsideElement.setAttribute("data-testid", "outside-element");
+    outsideElement = document.createElement('div');
+    outsideElement.setAttribute('data-testid', 'outside-element');
     document.body.appendChild(outsideElement);
   });
 
@@ -33,14 +33,14 @@ describe("useClickOutside", () => {
     vi.clearAllMocks();
   });
 
-  it("should return a ref object", () => {
+  it('should return a ref object', () => {
     const { result } = renderHook(() => useClickOutside(mockHandler));
 
     expect(result.current).toBeDefined();
     expect(result.current.current).toBeNull();
   });
 
-  it("should call handler when clicking outside the element", () => {
+  it('should call handler when clicking outside the element', () => {
     const { result } = renderHook(() => useClickOutside(mockHandler));
 
     // Attach ref to target element
@@ -52,7 +52,7 @@ describe("useClickOutside", () => {
     expect(mockHandler).toHaveBeenCalledTimes(1);
   });
 
-  it("should NOT call handler when clicking inside the element", () => {
+  it('should NOT call handler when clicking inside the element', () => {
     const { result } = renderHook(() => useClickOutside(mockHandler));
 
     // Attach ref to target element
@@ -64,7 +64,7 @@ describe("useClickOutside", () => {
     expect(mockHandler).not.toHaveBeenCalled();
   });
 
-  it("should call handler on touchstart outside the element", () => {
+  it('should call handler on touchstart outside the element', () => {
     const { result } = renderHook(() => useClickOutside(mockHandler));
 
     // Attach ref to target element
@@ -76,7 +76,7 @@ describe("useClickOutside", () => {
     expect(mockHandler).toHaveBeenCalledTimes(1);
   });
 
-  it("should NOT call handler on touchstart inside the element", () => {
+  it('should NOT call handler on touchstart inside the element', () => {
     const { result } = renderHook(() => useClickOutside(mockHandler));
 
     // Attach ref to target element
@@ -88,7 +88,7 @@ describe("useClickOutside", () => {
     expect(mockHandler).not.toHaveBeenCalled();
   });
 
-  it("should pass the event object to the handler", () => {
+  it('should pass the event object to the handler', () => {
     const { result } = renderHook(() => useClickOutside(mockHandler));
 
     // Attach ref to target element
@@ -100,12 +100,12 @@ describe("useClickOutside", () => {
     expect(mockHandler).toHaveBeenCalledWith(expect.any(Event));
   });
 
-  it("should handle nested child elements correctly", () => {
+  it('should handle nested child elements correctly', () => {
     const { result } = renderHook(() => useClickOutside(mockHandler));
 
     // Create nested child element
-    const childElement = document.createElement("span");
-    childElement.setAttribute("data-testid", "nested-child");
+    const childElement = document.createElement('span');
+    childElement.setAttribute('data-testid', 'nested-child');
     targetElement.appendChild(childElement);
 
     // Attach ref to target element
@@ -117,7 +117,7 @@ describe("useClickOutside", () => {
     expect(mockHandler).not.toHaveBeenCalled();
   });
 
-  it("should work correctly when handler changes", () => {
+  it('should work correctly when handler changes', () => {
     const firstHandler = vi.fn();
     const secondHandler = vi.fn();
 
@@ -143,8 +143,8 @@ describe("useClickOutside", () => {
     expect(secondHandler).toHaveBeenCalledTimes(1);
   });
 
-  it("should remove event listeners on unmount", () => {
-    const removeEventListenerSpy = vi.spyOn(document, "removeEventListener");
+  it('should remove event listeners on unmount', () => {
+    const removeEventListenerSpy = vi.spyOn(document, 'removeEventListener');
 
     const { result, unmount } = renderHook(() => useClickOutside(mockHandler));
 
@@ -154,18 +154,18 @@ describe("useClickOutside", () => {
     unmount();
 
     expect(removeEventListenerSpy).toHaveBeenCalledWith(
-      "mousedown",
+      'mousedown',
       expect.any(Function)
     );
     expect(removeEventListenerSpy).toHaveBeenCalledWith(
-      "touchstart",
+      'touchstart',
       expect.any(Function)
     );
 
     removeEventListenerSpy.mockRestore();
   });
 
-  it("should handle null ref gracefully", () => {
+  it('should handle null ref gracefully', () => {
     const { result } = renderHook(() => useClickOutside(mockHandler));
 
     // Don't attach ref to any element (ref.current remains null)
@@ -177,15 +177,15 @@ describe("useClickOutside", () => {
     expect(mockHandler).not.toHaveBeenCalled();
   });
 
-  it("should handle events with no target", () => {
+  it('should handle events with no target', () => {
     const { result } = renderHook(() => useClickOutside(mockHandler));
 
     // Attach ref to target element
     result.current.current = targetElement;
 
     // Create a custom event with no target
-    const customEvent = new Event("mousedown");
-    Object.defineProperty(customEvent, "target", {
+    const customEvent = new Event('mousedown');
+    Object.defineProperty(customEvent, 'target', {
       value: null,
       writable: false,
     });

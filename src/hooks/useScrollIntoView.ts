@@ -1,4 +1,11 @@
-import { useEffect, useState, useRef, useCallback, useMemo, RefObject } from "react";
+import {
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+  useMemo,
+  RefObject,
+} from 'react';
 
 interface ScrollIntoViewOptions {
   behavior?: ScrollBehavior;
@@ -37,23 +44,23 @@ const useScrollIntoView = <T extends HTMLElement = HTMLElement>(
   ref: RefObject<T>,
   triggers: unknown[] = [],
   delay: number = 100,
-  options: ScrollIntoViewOptions = { 
-    behavior: "smooth", 
-    block: "start", 
-    inline: "nearest" 
+  options: ScrollIntoViewOptions = {
+    behavior: 'smooth',
+    block: 'start',
+    inline: 'nearest',
   },
   onScrollComplete: () => void = () => {}
 ): UseScrollIntoViewReturn => {
   const [hasScrolled, setHasScrolled] = useState<boolean>(false);
   const [error, setError] = useState<ScrollError | null>(null);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutRef = useRef<number | null>(null);
 
   const validateRef = useCallback((): ScrollError | null => {
     if (!ref || !ref.current) {
-      return { message: "Invalid ref provided or element not found." };
+      return { message: 'Invalid ref provided or element not found.' };
     }
     if (!(ref.current instanceof HTMLElement)) {
-      return { message: "Ref is not attached to a valid DOM element." };
+      return { message: 'Ref is not attached to a valid DOM element.' };
     }
     return null;
   }, [ref]);

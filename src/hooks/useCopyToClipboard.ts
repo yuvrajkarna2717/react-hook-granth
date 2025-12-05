@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef } from 'react';
 
 interface UseCopyToClipboardOptions {
   resetTime?: number;
@@ -17,10 +17,12 @@ interface UseCopyToClipboardReturn {
  * @param options - Configuration options for the hook
  * @returns Object with isCopied state, copy function, and reset function
  */
-function useCopyToClipboard(options: UseCopyToClipboardOptions = {}): UseCopyToClipboardReturn {
+function useCopyToClipboard(
+  options: UseCopyToClipboardOptions = {}
+): UseCopyToClipboardReturn {
   const { resetTime = 2000, onSuccess, onError } = options;
   const [isCopied, setIsCopied] = useState<boolean>(false);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutRef = useRef<number | null>(null);
 
   const reset = useCallback(() => {
     setIsCopied(false);
@@ -30,39 +32,43 @@ function useCopyToClipboard(options: UseCopyToClipboardOptions = {}): UseCopyToC
     }
   }, []);
 
-  const copy = useCallback(async (text: string): Promise<boolean> => {
-    if (!navigator?.clipboard) {
-      const error = new Error("Clipboard API not supported");
-      console.warn(error.message);
-      onError?.(error);
-      return false;
-    }
-
-    try {
-      await navigator.clipboard.writeText(text);
-      setIsCopied(true);
-      onSuccess?.();
-
-      // Clear existing timeout
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
+  const copy = useCallback(
+    async (text: string): Promise<boolean> => {
+      if (!navigator?.clipboard) {
+        const error = new Error('Clipboard API not supported');
+        console.warn(error.message);
+        onError?.(error);
+        return false;
       }
 
-      // Set new timeout
-      timeoutRef.current = setTimeout(() => {
-        setIsCopied(false);
-        timeoutRef.current = null;
-      }, resetTime);
+      try {
+        await navigator.clipboard.writeText(text);
+        setIsCopied(true);
+        onSuccess?.();
 
-      return true;
-    } catch (error) {
-      const copyError = error instanceof Error ? error : new Error("Unknown error occurred");
-      console.error("Copy failed:", copyError);
-      onError?.(copyError);
-      setIsCopied(false);
-      return false;
-    }
-  }, [resetTime, onSuccess, onError]);
+        // Clear existing timeout
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
+
+        // Set new timeout
+        timeoutRef.current = setTimeout(() => {
+          setIsCopied(false);
+          timeoutRef.current = null;
+        }, resetTime);
+
+        return true;
+      } catch (error) {
+        const copyError =
+          error instanceof Error ? error : new Error('Unknown error occurred');
+        console.error('Copy failed:', copyError);
+        onError?.(copyError);
+        setIsCopied(false);
+        return false;
+      }
+    },
+    [resetTime, onSuccess, onError]
+  );
 
   return { isCopied, copy, reset };
 }

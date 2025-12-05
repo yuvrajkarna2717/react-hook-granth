@@ -1,27 +1,33 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from 'react';
+
+interface UseTimeoutReturn {
+  clear: () => void;
+  reset: () => void;
+}
 
 /**
  * Run a function after a delay. Supports cancel and reset.
- * @param {Function} callback - Function to run after delay.
- * @param {number} delay - Delay in ms.
+ * @param callback - Function to run after delay
+ * @param delay - Delay in milliseconds
+ * @returns Object with clear and reset functions
  */
-function useTimeout(callback, delay) {
-  const timeoutRef = useRef(null);
-  const savedCallback = useRef(callback);
+function useTimeout(callback: () => void, delay: number): UseTimeoutReturn {
+  const timeoutRef = useRef<number | null>(null);
+  const savedCallback = useRef<() => void>(callback);
 
   // Update the latest callback if it changes
   useEffect(() => {
     savedCallback.current = callback;
   }, [callback]);
 
-  const clear = useCallback(() => {
+  const clear = useCallback((): void => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
     }
   }, []);
 
-  const reset = useCallback(() => {
+  const reset = useCallback((): void => {
     clear();
     timeoutRef.current = setTimeout(() => {
       savedCallback.current();
