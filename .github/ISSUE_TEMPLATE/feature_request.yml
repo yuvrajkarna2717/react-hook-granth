@@ -1,0 +1,49 @@
+name: Feature Request
+description: Suggest a new hook or feature
+title: "[Feature]: "
+labels: ["enhancement"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a new feature! Please describe your idea below.
+
+  - type: input
+    id: hook-name
+    attributes:
+      label: Hook Name
+      description: What would you like to call this hook?
+      placeholder: e.g., useMyAwesomeHook
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Feature Description
+      description: Describe the hook and what it should do
+      placeholder: This hook should...
+    validations:
+      required: true
+
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use Case
+      description: What problem does this solve? When would you use it?
+      placeholder: I would use this when...
+    validations:
+      required: true
+
+  - type: textarea
+    id: api
+    attributes:
+      label: Proposed API
+      description: How would you like to use this hook?
+      placeholder: |
+        ```jsx
+        const { value, action } = useMyHook(options);
+        ```
+    validations:
+      required: false

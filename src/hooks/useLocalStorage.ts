@@ -2,12 +2,12 @@ import { useState, useEffect } from "react";
 
 /**
  * Custom hook to sync state with localStorage.
- * @param {string} key - localStorage key.
- * @param {*} initialValue - Initial value or function returning initial value.
- * @returns {[any, Function]} - [storedValue, setStoredValue]
+ * @param key - localStorage key
+ * @param initialValue - Initial value or function returning initial value
+ * @returns Tuple of [storedValue, setStoredValue]
  */
-function useLocalStorage(key, initialValue) {
-  const getSavedValue = () => {
+function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T) => void] {
+  const getSavedValue = (): T => {
     if (typeof window === "undefined") return initialValue;
     try {
       const item = window.localStorage.getItem(key);
@@ -18,7 +18,7 @@ function useLocalStorage(key, initialValue) {
     }
   };
 
-  const [storedValue, setStoredValue] = useState(getSavedValue);
+  const [storedValue, setStoredValue] = useState<T>(getSavedValue);
 
   useEffect(() => {
     try {

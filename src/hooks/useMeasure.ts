@@ -1,14 +1,19 @@
 import { useCallback, useLayoutEffect, useRef, useState } from "react";
 
+interface Bounds {
+  width: number;
+  height: number;
+}
+
 /**
  * Measure the size of a DOM element.
- * @returns {[ref, bounds]}
+ * @returns Tuple of [ref, bounds]
  */
-export default function useMeasure() {
-  const ref = useRef(null);
-  const [bounds, setBounds] = useState({ width: 0, height: 0 });
+export default function useMeasure(): [React.RefObject<HTMLElement>, Bounds] {
+  const ref = useRef<HTMLElement>(null);
+  const [bounds, setBounds] = useState<Bounds>({ width: 0, height: 0 });
 
-  const measure = useCallback(() => {
+  const measure = useCallback((): void => {
     if (ref.current) {
       const { width, height } = ref.current.getBoundingClientRect();
       setBounds({ width, height });

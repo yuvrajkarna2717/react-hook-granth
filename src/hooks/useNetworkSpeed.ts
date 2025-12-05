@@ -1,19 +1,24 @@
 import { useEffect, useState } from "react";
 
+interface NetworkSpeed {
+  connectionType: string;
+  downlink: number;
+}
+
 /**
  * Track the network speed and connection type.
- * @returns {{ connectionType: string, downlink: number }} - Network connection details.
+ * @returns Network connection details
  */
-export default function useNetworkSpeed() {
-  const [networkSpeed, setNetworkSpeed] = useState({
+export default function useNetworkSpeed(): NetworkSpeed {
+  const [networkSpeed, setNetworkSpeed] = useState<NetworkSpeed>({
     connectionType: "unknown",
     downlink: 0,
   });
 
   useEffect(() => {
-    const updateNetworkSpeed = () => {
-      if (navigator.connection) {
-        const { effectiveType, downlink } = navigator.connection;
+    const updateNetworkSpeed = (): void => {
+      if ('connection' in navigator && (navigator as any).connection) {
+        const { effectiveType, downlink } = (navigator as any).connection;
         setNetworkSpeed({ connectionType: effectiveType, downlink });
       }
     };

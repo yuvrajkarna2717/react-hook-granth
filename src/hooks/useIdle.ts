@@ -2,17 +2,17 @@ import { useEffect, useState } from "react";
 
 /**
  * Detect if user is idle after a given timeout.
- * @param {number} timeout - in milliseconds
- * @returns {boolean} - true if idle
+ * @param timeout - Timeout in milliseconds (default: 3000)
+ * @returns True if user is idle
  */
-export default function useIdle(timeout = 3000) {
-  const [idle, setIdle] = useState(false);
+export default function useIdle(timeout: number = 3000): boolean {
+  const [idle, setIdle] = useState<boolean>(false);
 
   useEffect(() => {
-    let timer = null;
+    let timer: NodeJS.Timeout | null = null;
 
-    const reset = () => {
-      clearTimeout(timer);
+    const reset = (): void => {
+      if (timer) clearTimeout(timer);
       setIdle(false);
       timer = setTimeout(() => setIdle(true), timeout);
     };
@@ -24,7 +24,7 @@ export default function useIdle(timeout = 3000) {
     reset(); // start the timer
 
     return () => {
-      clearTimeout(timer);
+      if (timer) clearTimeout(timer);
       events.forEach((e) => window.removeEventListener(e, reset));
     };
   }, [timeout]);

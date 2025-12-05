@@ -1,6 +1,6 @@
 {
   "name": "react-hook-granth",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A collection of custom React hooks for efficient state management and UI logic.",
   "type": "module",
   "repository": {
@@ -19,23 +19,59 @@
   "author": "Yuvraj Karna",
   "license": "MIT",
   "private": false,
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.js"
+    }
+  },
   "scripts": {
     "test": "vitest",
-    "build": "echo 'No build step needed'",
-    "prepublishOnly": "npm test"
+    "build": "rollup -c",
+    "build:watch": "rollup -c -w",
+    "prepublishOnly": "npm run build && npm test",
+    "clean": "rimraf dist",
+    "lint": "eslint src --ext .ts,.tsx",
+    "lint:fix": "eslint src --ext .ts,.tsx --fix",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
+    "check": "npm run lint && npm run format:check && npm run test",
+    "fix": "npm run lint:fix && npm run format"
   },
   "files": [
-    "src"
+    "dist",
+    "README.md",
+    "LICENSE"
   ],
-  "dependencies": {
-    "react": "^16.14.0",
-    "react-dom": "^16.14.0"
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
   },
   "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-typescript": "^11.1.5",
     "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/react": "12.1.5",
+    "@testing-library/react": "^14.0.0",
     "@testing-library/react-hooks": "^8.0.1",
+    "@types/react": "^18.2.45",
     "jsdom": "^26.0.0",
-    "vitest": "^3.0.6"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "rimraf": "^5.0.5",
+    "rollup": "^4.9.1",
+    "rollup-plugin-dts": "^6.1.0",
+    "tslib": "^2.6.2",
+    "typescript": "^5.3.3",
+    "vitest": "^3.0.6",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "eslint": "^8.56.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "prettier": "^3.1.1"
   }
 }
