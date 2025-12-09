@@ -36,7 +36,6 @@ function useCopyToClipboard(
     async (text: string): Promise<boolean> => {
       if (!navigator?.clipboard) {
         const error = new Error('Clipboard API not supported');
-        console.warn(error.message);
         onError?.(error);
         return false;
       }
@@ -61,7 +60,6 @@ function useCopyToClipboard(
       } catch (error) {
         const copyError =
           error instanceof Error ? error : new Error('Unknown error occurred');
-        console.error('Copy failed:', copyError);
         onError?.(copyError);
         setIsCopied(false);
         return false;
