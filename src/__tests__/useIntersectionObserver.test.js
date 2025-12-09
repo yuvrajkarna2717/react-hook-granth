@@ -50,7 +50,7 @@ describe('useIntersectionObserver', () => {
     const mockElement = document.createElement('div');
 
     act(() => {
-      result.current.ref(mockElement); // callback ref
+      result.current.ref(mockElement);
     });
 
     return { result, mockElement, rerender, unmount };
@@ -135,7 +135,6 @@ describe('useIntersectionObserver', () => {
       expect(mockDisconnect).toHaveBeenCalled();
     });
 
-    // Further changes ignored
     act(() =>
       observerCallback([{ isIntersecting: false, target: mockElement }])
     );
@@ -190,7 +189,6 @@ describe('useIntersectionObserver', () => {
 
     await waitFor(() => expect(result.current.isIntersecting).toBe(true));
 
-    // Change options → unfreeze
     rerender({ freezeOnceVisible: false });
 
     await waitFor(() => expect(mockIntersectionObserver).toHaveBeenCalledTimes(2));
