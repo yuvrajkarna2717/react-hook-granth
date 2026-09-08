@@ -129,8 +129,9 @@ describe('useCopyToClipboard', () => {
   describe('Failed Copy Operations', () => {
     it('should handle clipboard API not supported', async () => {
       // Remove clipboard from navigator
-      const originalClipboard = navigator.clipboard;
-      delete navigator.clipboard;
+      const nav = navigator as { clipboard?: Clipboard };
+      const originalClipboard = nav.clipboard;
+      delete nav.clipboard;
 
       const onError = vi.fn();
       const { result } = renderHook(() => useCopyToClipboard({ onError }));
@@ -149,7 +150,7 @@ describe('useCopyToClipboard', () => {
       );
 
       // Restore clipboard
-      navigator.clipboard = originalClipboard;
+      nav.clipboard = originalClipboard;
     });
 
     it('should handle clipboard write failure', async () => {

@@ -1,12 +1,12 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 
-interface UseCopyToClipboardOptions {
+export interface UseCopyToClipboardOptions {
   resetTime?: number;
   onSuccess?: () => void;
   onError?: (error: Error) => void;
 }
 
-interface UseCopyToClipboardReturn {
+export interface UseCopyToClipboardReturn {
   isCopied: boolean;
   copy: (text: string) => Promise<boolean>;
   reset: () => void;
@@ -22,7 +22,15 @@ function useCopyToClipboard(
 ): UseCopyToClipboardReturn {
   const { resetTime = 2000, onSuccess, onError } = options;
   const [isCopied, setIsCopied] = useState<boolean>(false);
-  const timeoutRef = useRef<number | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Clear any pending reset timer on unmount to avoid state updates on an
+  // unmounted component.
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
   const reset = useCallback(() => {
     setIsCopied(false);

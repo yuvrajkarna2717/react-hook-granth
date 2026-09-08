@@ -24,7 +24,7 @@ describe('usePrevious', () => {
 
   it('should work with different data types', () => {
     const { result, rerender } = renderHook(({ value }) => usePrevious(value), {
-      initialProps: { value: 1 },
+      initialProps: { value: 1 as unknown },
     });
 
     rerender({ value: 2 });
