@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    // Tests use loosely-typed local fixtures and simulate refs directly;
+    // relax implicit-any while keeping the rest of strict mode on.
+    "noImplicitAny": false,
+    "module": "ESNext",
+    "types": ["vitest/globals", "@testing-library/jest-dom"]
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

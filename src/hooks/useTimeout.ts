@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 
-interface UseTimeoutReturn {
+export interface UseTimeoutReturn {
   clear: () => void;
   reset: () => void;
 }
@@ -12,7 +12,7 @@ interface UseTimeoutReturn {
  * @returns Object with clear and reset functions
  */
 function useTimeout(callback: () => void, delay: number): UseTimeoutReturn {
-  const timeoutRef = useRef<number | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const savedCallback = useRef<() => void>(callback);
 
   // Update the latest callback if it changes

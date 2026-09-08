@@ -1,4 +1,5 @@
 import js from '@eslint/js';
+import globals from 'globals';
 import typescript from '@typescript-eslint/eslint-plugin';
 import typescriptParser from '@typescript-eslint/parser';
 import react from 'eslint-plugin-react';
@@ -7,7 +8,9 @@ import reactHooks from 'eslint-plugin-react-hooks';
 export default [
   js.configs.recommended,
   {
-    files: ['src/**/*.{ts,tsx,js}'],
+    // Source hooks: type-aware, browser + React globals available.
+    files: ['src/**/*.{ts,tsx}'],
+    ignores: ['src/**/__tests__/**'],
     languageOptions: {
       parser: typescriptParser,
       parserOptions: {
@@ -18,17 +21,9 @@ export default [
         }
       },
       globals: {
-        vi: 'readonly',
-        navigator: 'readonly',
-        window: 'readonly',
-        document: 'readonly',
-        localStorage: 'readonly',
-        sessionStorage: 'readonly',
-        console: 'readonly',
-        setTimeout: 'readonly',
-        clearTimeout: 'readonly',
-        setInterval: 'readonly',
-        clearInterval: 'readonly'
+        ...globals.browser,
+        ...globals.es2021,
+        React: 'readonly'
       }
     },
     plugins: {
@@ -40,7 +35,11 @@ export default [
       ...typescript.configs.recommended.rules,
       ...react.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
-      'react/react-in-jsx-scope': 'off'
+      'react/react-in-jsx-scope': 'off',
+      // TypeScript's own checker handles undefined identifiers and type-only
+      // globals (e.g. ScrollBehavior, IntersectionObserverInit); core no-undef
+      // produces false positives on typed code.
+      'no-undef': 'off'
     },
     settings: {
       react: {
@@ -49,20 +48,39 @@ export default [
     }
   },
   {
-    files: ['src/**/__tests__/**/*.js'],
+    // Test files: TypeScript + Vitest globals + browser environment.
+    files: ['src/**/__tests__/**/*.{ts,tsx}'],
     languageOptions: {
+      parser: typescriptParser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        ecmaFeatures: {
+          jsx: true
+        }
+      },
       globals: {
+        ...globals.browser,
+        ...globals.es2021,
         vi: 'readonly',
         describe: 'readonly',
         it: 'readonly',
         expect: 'readonly',
+        beforeAll: 'readonly',
+        afterAll: 'readonly',
         beforeEach: 'readonly',
         afterEach: 'readonly',
-        test: 'readonly',
-        navigator: 'readonly',
-        window: 'readonly',
-        document: 'readonly'
+        test: 'readonly'
       }
+    },
+    plugins: {
+      '@typescript-eslint': typescript
+    },
+    rules: {
+      ...typescript.configs.recommended.rules,
+      // Tests legitimately use `any` for mocks and partial fixtures.
+      '@typescript-eslint/no-explicit-any': 'off',
+      'no-undef': 'off'
     }
   },
   {

@@ -3,11 +3,11 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import useIntersectionObserver from '../hooks/useIntersectionObserver';
 
 describe('useIntersectionObserver', () => {
-  let mockIntersectionObserver;
-  let mockObserve;
-  let mockUnobserve;
-  let mockDisconnect;
-  let observerCallback;
+  let mockIntersectionObserver: any;
+  let mockObserve: ReturnType<typeof vi.fn>;
+  let mockUnobserve: ReturnType<typeof vi.fn>;
+  let mockDisconnect: ReturnType<typeof vi.fn>;
+  let observerCallback: ((entries: any[]) => void) | null;
 
   beforeEach(() => {
     mockObserve = vi.fn();
@@ -29,19 +29,22 @@ describe('useIntersectionObserver', () => {
       };
     });
 
-    global.IntersectionObserver = mockIntersectionObserver;
+    globalThis.IntersectionObserver = mockIntersectionObserver;
   });
 
   afterEach(() => {
     vi.clearAllMocks();
     observerCallback = null;
 
-    if (global.IntersectionObserver === mockIntersectionObserver) {
-      delete global.IntersectionObserver;
+    if (globalThis.IntersectionObserver === mockIntersectionObserver) {
+      delete (globalThis as { IntersectionObserver?: unknown })
+        .IntersectionObserver;
     }
   });
 
-  const renderWithElement = (options) => {
+  const renderWithElement = (
+    options?: Parameters<typeof useIntersectionObserver>[0]
+  ) => {
     const { result, rerender, unmount } = renderHook(
       (props) => useIntersectionObserver(props),
       { initialProps: options }
@@ -100,7 +103,7 @@ describe('useIntersectionObserver', () => {
 
     const mockEntry = { isIntersecting: true, target: mockElement };
 
-    act(() => observerCallback([mockEntry]));
+    act(() => observerCallback!([mockEntry]));
 
     await waitFor(() => {
       expect(result.current.isIntersecting).toBe(true);
@@ -112,11 +115,13 @@ describe('useIntersectionObserver', () => {
     const { result, mockElement } = renderWithElement();
     await waitFor(() => expect(typeof observerCallback).toBe('function'));
 
-    act(() => observerCallback([{ isIntersecting: true, target: mockElement }]));
+    act(() =>
+      observerCallback!([{ isIntersecting: true, target: mockElement }])
+    );
     await waitFor(() => expect(result.current.isIntersecting).toBe(true));
 
     const mockEntry = { isIntersecting: false, target: mockElement };
-    act(() => observerCallback([mockEntry]));
+    act(() => observerCallback!([mockEntry]));
 
     await waitFor(() => {
       expect(result.current.isIntersecting).toBe(false);
@@ -125,10 +130,14 @@ describe('useIntersectionObserver', () => {
   });
 
   it('should freeze when freezeOnceVisible is true', async () => {
-    const { result, mockElement } = renderWithElement({ freezeOnceVisible: true });
+    const { result, mockElement } = renderWithElement({
+      freezeOnceVisible: true,
+    });
     await waitFor(() => expect(typeof observerCallback).toBe('function'));
 
-    act(() => observerCallback([{ isIntersecting: true, target: mockElement }]));
+    act(() =>
+      observerCallback!([{ isIntersecting: true, target: mockElement }])
+    );
 
     await waitFor(() => {
       expect(result.current.isIntersecting).toBe(true);
@@ -136,7 +145,7 @@ describe('useIntersectionObserver', () => {
     });
 
     act(() =>
-      observerCallback([{ isIntersecting: false, target: mockElement }])
+      observerCallback!([{ isIntersecting: false, target: mockElement }])
     );
 
     await waitFor(() => {
@@ -154,7 +163,9 @@ describe('useIntersectionObserver', () => {
   it('should recreate observer when options change', async () => {
     const { rerender } = renderWithElement({ threshold: 0.1 });
 
-    await waitFor(() => expect(mockIntersectionObserver).toHaveBeenCalledTimes(1));
+    await waitFor(() =>
+      expect(mockIntersectionObserver).toHaveBeenCalledTimes(1)
+    );
 
     rerender({ threshold: 0.9 });
 
@@ -165,8 +176,9 @@ describe('useIntersectionObserver', () => {
   });
 
   it('should handle SSR environment', () => {
-    const original = global.IntersectionObserver;
-    delete global.IntersectionObserver;
+    const original = globalThis.IntersectionObserver;
+    delete (globalThis as { IntersectionObserver?: unknown })
+      .IntersectionObserver;
 
     const { result } = renderHook(() => useIntersectionObserver());
 
@@ -175,7 +187,7 @@ describe('useIntersectionObserver', () => {
     expect(result.current.isIntersecting).toBe(false);
     expect(result.current.entry).toBeUndefined();
 
-    global.IntersectionObserver = original;
+    globalThis.IntersectionObserver = original;
   });
 
   it('should reset frozen state when options change', async () => {
@@ -185,16 +197,20 @@ describe('useIntersectionObserver', () => {
 
     await waitFor(() => expect(typeof observerCallback).toBe('function'));
 
-    act(() => observerCallback([{ isIntersecting: true, target: mockElement }]));
+    act(() =>
+      observerCallback!([{ isIntersecting: true, target: mockElement }])
+    );
 
     await waitFor(() => expect(result.current.isIntersecting).toBe(true));
 
     rerender({ freezeOnceVisible: false });
 
-    await waitFor(() => expect(mockIntersectionObserver).toHaveBeenCalledTimes(2));
+    await waitFor(() =>
+      expect(mockIntersectionObserver).toHaveBeenCalledTimes(2)
+    );
 
     act(() =>
-      observerCallback([{ isIntersecting: false, target: mockElement }])
+      observerCallback!([{ isIntersecting: false, target: mockElement }])
     );
 
     await waitFor(() => expect(result.current.isIntersecting).toBe(false));
@@ -221,7 +237,7 @@ describe('useIntersectionObserver', () => {
     const otherElement = document.createElement('div');
 
     act(() =>
-      observerCallback([
+      observerCallback!([
         { isIntersecting: false, target: otherElement },
         { isIntersecting: false, target: mockElement },
       ])
@@ -229,11 +245,11 @@ describe('useIntersectionObserver', () => {
 
     await waitFor(() => {
       expect(result.current.isIntersecting).toBe(false);
-      expect(result.current.entry.target).toBe(mockElement);
+      expect(result.current.entry?.target).toBe(mockElement);
     });
 
     act(() =>
-      observerCallback([
+      observerCallback!([
         { isIntersecting: false, target: otherElement },
         { isIntersecting: true, target: mockElement },
       ])
@@ -246,7 +262,9 @@ describe('useIntersectionObserver', () => {
     const options = { threshold: 0.5 };
     const { rerender } = renderWithElement(options);
 
-    await waitFor(() => expect(mockIntersectionObserver).toHaveBeenCalledTimes(1));
+    await waitFor(() =>
+      expect(mockIntersectionObserver).toHaveBeenCalledTimes(1)
+    );
 
     rerender(options);
 
@@ -260,17 +278,17 @@ describe('useIntersectionObserver', () => {
     await waitFor(() => expect(typeof observerCallback).toBe('function'));
 
     act(() =>
-      observerCallback([{ isIntersecting: true, target: mockElement }])
+      observerCallback!([{ isIntersecting: true, target: mockElement }])
     );
     await waitFor(() => expect(result.current.isIntersecting).toBe(true));
 
     act(() =>
-      observerCallback([{ isIntersecting: false, target: mockElement }])
+      observerCallback!([{ isIntersecting: false, target: mockElement }])
     );
     await waitFor(() => expect(result.current.isIntersecting).toBe(false));
 
     act(() =>
-      observerCallback([{ isIntersecting: true, target: mockElement }])
+      observerCallback!([{ isIntersecting: true, target: mockElement }])
     );
     await waitFor(() => expect(result.current.isIntersecting).toBe(true));
   });

@@ -185,7 +185,7 @@ describe('useDebounce', () => {
   describe('Callbacks', () => {
     it('should call onDebounce callback', () => {
       const onDebounce = vi.fn();
-      const { result, rerender } = renderHook(
+      const { rerender } = renderHook(
         ({ value }) => useDebounce(value, 300, { onDebounce }),
         { initialProps: { value: 'initial' } }
       );
@@ -407,6 +407,77 @@ describe('useDebounce', () => {
 
       expect(result.current.cancel).toBe(originalCancel);
       expect(result.current.flush).toBe(originalFlush);
+    });
+  });
+
+  describe('Max Wait', () => {
+    it('should force a commit after maxWait despite continuous changes', () => {
+      const { result, rerender } = renderHook(
+        ({ value }) => useDebounce(value, 300, { maxWait: 500 }),
+        { initialProps: { value: 'initial' } }
+      );
+
+      rerender({ value: 'change1' });
+      act(() => {
+        vi.advanceTimersByTime(200);
+      });
+
+      rerender({ value: 'change2' });
+      act(() => {
+        vi.advanceTimersByTime(200);
+      });
+
+      // Still pending; regular 300ms debounce keeps resetting.
+      expect(result.current.debouncedValue).toBe('initial');
+
+      rerender({ value: 'final' });
+      act(() => {
+        vi.advanceTimersByTime(100); // total 500ms since first change
+      });
+
+      // maxWait fired with the latest value.
+      expect(result.current.debouncedValue).toBe('final');
+      expect(result.current.isPending).toBe(false);
+    });
+
+    it('should call onDebounce when maxWait forces a commit', () => {
+      const onDebounce = vi.fn();
+      const { rerender } = renderHook(
+        ({ value }) => useDebounce(value, 300, { maxWait: 400, onDebounce }),
+        { initialProps: { value: 'initial' } }
+      );
+
+      rerender({ value: 'a' });
+      act(() => vi.advanceTimersByTime(200));
+      rerender({ value: 'b' });
+      act(() => vi.advanceTimersByTime(200)); // hits maxWait
+
+      expect(onDebounce).toHaveBeenCalledWith('b');
+    });
+  });
+
+  describe('Leading + trailing edges', () => {
+    it('should commit once on leading and once on trailing', () => {
+      const onDebounce = vi.fn();
+      const { result, rerender } = renderHook(
+        ({ value }) =>
+          useDebounce(value, 300, {
+            leading: true,
+            trailing: true,
+            onDebounce,
+          }),
+        { initialProps: { value: 'initial' } }
+      );
+
+      rerender({ value: 'updated' });
+      // Leading edge applies immediately.
+      expect(result.current.debouncedValue).toBe('updated');
+      expect(result.current.isPending).toBe(true);
+
+      act(() => vi.advanceTimersByTime(300));
+      expect(result.current.isPending).toBe(false);
+      // Trailing commit invokes onDebounce.
+      expect(onDebounce).toHaveBeenCalledWith('updated');
     });
   });
 });

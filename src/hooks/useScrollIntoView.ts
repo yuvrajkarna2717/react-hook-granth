@@ -1,59 +1,57 @@
-import {
-  useEffect,
-  useState,
-  useRef,
-  useCallback,
-  useMemo,
-  RefObject,
-} from 'react';
+import { useEffect, useState, useRef, useCallback, RefObject } from 'react';
 
-interface ScrollIntoViewOptions {
+export interface ScrollIntoViewOptions {
   behavior?: ScrollBehavior;
   block?: ScrollLogicalPosition;
   inline?: ScrollLogicalPosition;
 }
 
-interface ScrollError {
+export interface ScrollError {
   message: string;
 }
 
-interface UseScrollIntoViewReturn {
+export interface UseScrollIntoViewReturn {
   hasScrolled: boolean;
   error: ScrollError | null;
   scrollToElement: () => void;
 }
 
+const DEFAULT_OPTIONS: ScrollIntoViewOptions = {
+  behavior: 'smooth',
+  block: 'start',
+  inline: 'nearest',
+};
+
 /**
- * useScrollIntoView Hook
+ * Scroll an element into view when any of the provided triggers change,
+ * with manual control and error reporting.
  *
- * This hook automatically scrolls an element into view when any specified trigger in an array changes.
- * It also provides manual control, improved error handling, and optimizations.
- *
- * @param ref - The React ref object pointing to the target element.
- * @param triggers - An array of state variables that trigger the scroll effect when any of them change.
- * @param delay - The delay (in milliseconds) before scrolling occurs.
- * @param options - ScrollIntoView options.
- * @param onScrollComplete - A callback function executed after scrolling is completed.
- *
- * @returns An object containing:
- *   - hasScrolled: Indicates whether the scrolling has completed.
- *   - error: An error object if the ref is invalid.
- *   - scrollToElement: A function to manually trigger scrolling.
+ * @param ref - Ref pointing to the target element.
+ * @param triggers - Values that trigger a scroll when any of them change.
+ * @param delay - Delay in milliseconds before scrolling.
+ * @param options - `scrollIntoView` options.
+ * @param onScrollComplete - Called after scrolling completes.
+ * @returns `hasScrolled`, `error`, and a manual `scrollToElement` function.
  */
 const useScrollIntoView = <T extends HTMLElement = HTMLElement>(
-  ref: RefObject<T>,
+  ref: RefObject<T | null> | null,
   triggers: unknown[] = [],
   delay: number = 100,
-  options: ScrollIntoViewOptions = {
-    behavior: 'smooth',
-    block: 'start',
-    inline: 'nearest',
-  },
+  options: ScrollIntoViewOptions = DEFAULT_OPTIONS,
   onScrollComplete: () => void = () => {}
 ): UseScrollIntoViewReturn => {
   const [hasScrolled, setHasScrolled] = useState<boolean>(false);
   const [error, setError] = useState<ScrollError | null>(null);
-  const timeoutRef = useRef<number | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Hold the latest options/callback in refs so `scrollToElement` stays stable
+  // even when callers pass inline object/function literals.
+  const optionsRef = useRef(options);
+  const onScrollCompleteRef = useRef(onScrollComplete);
+  useEffect(() => {
+    optionsRef.current = options;
+    onScrollCompleteRef.current = onScrollComplete;
+  });
 
   const validateRef = useCallback((): ScrollError | null => {
     if (!ref || !ref.current) {
@@ -79,13 +77,11 @@ const useScrollIntoView = <T extends HTMLElement = HTMLElement>(
     }
 
     timeoutRef.current = setTimeout(() => {
-      ref.current?.scrollIntoView(options);
+      ref?.current?.scrollIntoView(optionsRef.current);
       setHasScrolled(true);
-      onScrollComplete();
+      onScrollCompleteRef.current();
     }, delay);
-  }, [validateRef, delay, options, onScrollComplete, ref]);
-
-  const triggerDeps = useMemo(() => [...triggers], [triggers]);
+  }, [validateRef, delay, ref]);
 
   useEffect(() => {
     if (!triggers.some(Boolean)) return;
@@ -95,7 +91,16 @@ const useScrollIntoView = <T extends HTMLElement = HTMLElement>(
         clearTimeout(timeoutRef.current);
       }
     };
-  }, triggerDeps);
+    // Re-run when any trigger changes or the scroll routine changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scrollToElement, ...triggers]);
+
+  // Ensure any pending timer is cleared on unmount.
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
   return { hasScrolled, error, scrollToElement };
 };

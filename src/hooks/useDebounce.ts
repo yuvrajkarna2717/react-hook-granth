@@ -1,15 +1,20 @@
 // src/hooks/useDebounce.ts
 import { useEffect, useState, useRef, useCallback } from 'react';
 
-interface UseDebounceOptions {
+export interface UseDebounceOptions<T> {
+  /** Fire on the leading edge of the timeout. Default: false. */
   leading?: boolean;
+  /** Fire on the trailing edge of the timeout. Default: true. */
   trailing?: boolean;
+  /** Maximum time the value is allowed to be delayed before it is forced through. */
   maxWait?: number;
-  onDebounce?: (value: any) => void;
+  /** Called when the debounced value is committed. */
+  onDebounce?: (value: T) => void;
+  /** Called when a pending debounce is cancelled. */
   onCancel?: () => void;
 }
 
-interface UseDebounceReturn<T> {
+export interface UseDebounceReturn<T> {
   debouncedValue: T;
   cancel: () => void;
   flush: () => void;
@@ -19,24 +24,31 @@ interface UseDebounceReturn<T> {
 export default function useDebounce<T>(
   value: T,
   delay: number = 300,
-  options: UseDebounceOptions = {}
+  options: UseDebounceOptions<T> = {}
 ): UseDebounceReturn<T> {
-  const {
-    leading = false,
-    trailing = true,
-    maxWait,
-    onDebounce,
-    onCancel,
-  } = options;
+  const { leading = false, trailing = true, maxWait } = options;
+
+  // Keep callbacks in refs so effects don't need them as dependencies
+  // (prevents stale closures without re-running the debounce effect).
+  const onDebounceRef = useRef(options.onDebounce);
+  const onCancelRef = useRef(options.onCancel);
+  useEffect(() => {
+    onDebounceRef.current = options.onDebounce;
+    onCancelRef.current = options.onCancel;
+  }, [options.onDebounce, options.onCancel]);
 
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
   const [isPending, setIsPending] = useState<boolean>(false);
 
-  const timeoutRef = useRef<number | null>(null);
-  const maxTimeoutRef = useRef<number | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const maxTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const previousValueRef = useRef<T>(value);
   const leadingCalledRef = useRef<boolean>(false);
-  const maxWaitStartTimeRef = useRef<number | null>(null); // Track when maxWait sequence started
+  const maxWaitStartTimeRef = useRef<number | null>(null);
+  // Always holds the most recent value so the maxWait timer (scheduled once at
+  // the start of a burst) commits the latest value rather than a stale one.
+  const latestValueRef = useRef<T>(value);
+  latestValueRef.current = value;
 
   const clearTimeouts = useCallback(() => {
     if (timeoutRef.current) {
@@ -59,14 +71,14 @@ export default function useDebounce<T>(
       clearTimeouts();
 
       if (source === 'debounce' || source === 'maxwait') {
-        onDebounce?.(newValue);
+        onDebounceRef.current?.(newValue);
       }
 
       previousValueRef.current = newValue;
       leadingCalledRef.current = false;
-      maxWaitStartTimeRef.current = null; // Reset maxWait sequence
+      maxWaitStartTimeRef.current = null;
     },
-    [onDebounce, clearTimeouts]
+    [clearTimeouts]
   );
 
   const cancel = useCallback(() => {
@@ -74,8 +86,8 @@ export default function useDebounce<T>(
     setIsPending(false);
     leadingCalledRef.current = false;
     maxWaitStartTimeRef.current = null;
-    onCancel?.();
-  }, [clearTimeouts, onCancel]);
+    onCancelRef.current?.();
+  }, [clearTimeouts]);
 
   const flush = useCallback(() => {
     if (isPending && timeoutRef.current) {
@@ -109,7 +121,7 @@ export default function useDebounce<T>(
         // Leading only - no pending state
         setIsPending(false);
         previousValueRef.current = value;
-        onDebounce?.(value);
+        onDebounceRef.current?.(value);
         maxWaitStartTimeRef.current = null;
         return;
       } else {
@@ -138,17 +150,22 @@ export default function useDebounce<T>(
         return;
       }
 
+      // Commit the latest value when maxWait elapses, not the value captured
+      // when the timer was scheduled.
       maxTimeoutRef.current = setTimeout(() => {
-        updateValue(value, 'maxwait');
+        updateValue(latestValueRef.current, 'maxwait');
       }, remainingMaxWait);
     }
   }, [value, delay, leading, trailing, maxWait, updateValue]);
 
-  // Reset leading flag when options change
+  // Reset leading flag when timing options change
   useEffect(() => {
     leadingCalledRef.current = false;
     maxWaitStartTimeRef.current = null;
   }, [leading, trailing, delay]);
+
+  // Clean up any pending timers on unmount.
+  useEffect(() => clearTimeouts, [clearTimeouts]);
 
   return {
     debouncedValue,

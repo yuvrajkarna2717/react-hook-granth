@@ -1,35 +1,47 @@
-import { useState, useEffect } from 'react';
+import {
+  useState,
+  useEffect,
+  useCallback,
+  Dispatch,
+  SetStateAction,
+} from 'react';
+
+export type UseLocalStorageReturn<T> = [T, Dispatch<SetStateAction<T>>];
 
 /**
- * Custom hook to sync state with localStorage.
+ * Sync state with `localStorage`, SSR-safe.
+ *
+ * The setter accepts a value or an updater function, mirroring `useState`.
  * @param key - localStorage key
- * @param initialValue - Initial value or function returning initial value
- * @returns Tuple of [storedValue, setStoredValue]
+ * @param initialValue - Initial value used when nothing is stored or on read failure
+ * @returns Tuple of `[storedValue, setStoredValue]`
  */
 function useLocalStorage<T>(
   key: string,
   initialValue: T
-): [T, (value: T) => void] {
-  const getSavedValue = (): T => {
+): UseLocalStorageReturn<T> {
+  const readValue = useCallback((): T => {
     if (typeof window === 'undefined') return initialValue;
     try {
       const item = window.localStorage.getItem(key);
-      return item ? JSON.parse(item) : initialValue;
+      return item ? (JSON.parse(item) as T) : initialValue;
     } catch (error) {
-      console.error('Error reading from localStorage', error);
+      console.error(`useLocalStorage: error reading key "${key}"`, error);
       return initialValue;
     }
-  };
+    // `initialValue` is intentionally read only for the first mount; including
+    // it would reset the value whenever a new object/array literal is passed.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key]);
 
-  const [storedValue, setStoredValue] = useState<T>(getSavedValue);
+  const [storedValue, setStoredValue] = useState<T>(readValue);
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
     try {
-      if (typeof window !== 'undefined') {
-        window.localStorage.setItem(key, JSON.stringify(storedValue));
-      }
+      window.localStorage.setItem(key, JSON.stringify(storedValue));
     } catch (error) {
-      console.error('Error writing to localStorage', error);
+      console.error(`useLocalStorage: error writing key "${key}"`, error);
     }
   }, [key, storedValue]);
 

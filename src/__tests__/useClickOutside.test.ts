@@ -1,13 +1,21 @@
-// src/__tests__/useClickOutside.test.js
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  type Mock,
+} from 'vitest';
 import { renderHook } from '@testing-library/react';
 import { fireEvent } from '@testing-library/react';
 import useClickOutside from '../hooks/useClickOutside';
+import { setRefCurrent } from './testUtils';
 
 describe('useClickOutside', () => {
-  let mockHandler;
-  let targetElement;
-  let outsideElement;
+  let mockHandler: Mock;
+  let targetElement: HTMLDivElement;
+  let outsideElement: HTMLDivElement;
 
   beforeEach(() => {
     mockHandler = vi.fn();
@@ -44,7 +52,7 @@ describe('useClickOutside', () => {
     const { result } = renderHook(() => useClickOutside(mockHandler));
 
     // Attach ref to target element
-    result.current.current = targetElement;
+    setRefCurrent(result.current, targetElement);
 
     // Click outside element
     fireEvent.mouseDown(outsideElement);
@@ -56,7 +64,7 @@ describe('useClickOutside', () => {
     const { result } = renderHook(() => useClickOutside(mockHandler));
 
     // Attach ref to target element
-    result.current.current = targetElement;
+    setRefCurrent(result.current, targetElement);
 
     // Click inside target element
     fireEvent.mouseDown(targetElement);
@@ -68,7 +76,7 @@ describe('useClickOutside', () => {
     const { result } = renderHook(() => useClickOutside(mockHandler));
 
     // Attach ref to target element
-    result.current.current = targetElement;
+    setRefCurrent(result.current, targetElement);
 
     // Touch outside element
     fireEvent.touchStart(outsideElement);
@@ -80,7 +88,7 @@ describe('useClickOutside', () => {
     const { result } = renderHook(() => useClickOutside(mockHandler));
 
     // Attach ref to target element
-    result.current.current = targetElement;
+    setRefCurrent(result.current, targetElement);
 
     // Touch inside target element
     fireEvent.touchStart(targetElement);
@@ -92,7 +100,7 @@ describe('useClickOutside', () => {
     const { result } = renderHook(() => useClickOutside(mockHandler));
 
     // Attach ref to target element
-    result.current.current = targetElement;
+    setRefCurrent(result.current, targetElement);
 
     // Click outside element
     fireEvent.mouseDown(outsideElement);
@@ -109,7 +117,7 @@ describe('useClickOutside', () => {
     targetElement.appendChild(childElement);
 
     // Attach ref to target element
-    result.current.current = targetElement;
+    setRefCurrent(result.current, targetElement);
 
     // Click on nested child (should not trigger handler)
     fireEvent.mouseDown(childElement);
@@ -127,7 +135,7 @@ describe('useClickOutside', () => {
     );
 
     // Attach ref to target element
-    result.current.current = targetElement;
+    setRefCurrent(result.current, targetElement);
 
     // Click with first handler
     fireEvent.mouseDown(outsideElement);
@@ -149,7 +157,7 @@ describe('useClickOutside', () => {
     const { result, unmount } = renderHook(() => useClickOutside(mockHandler));
 
     // Attach ref to target element
-    result.current.current = targetElement;
+    setRefCurrent(result.current, targetElement);
 
     unmount();
 
@@ -166,7 +174,7 @@ describe('useClickOutside', () => {
   });
 
   it('should handle null ref gracefully', () => {
-    const { result } = renderHook(() => useClickOutside(mockHandler));
+    renderHook(() => useClickOutside(mockHandler));
 
     // Don't attach ref to any element (ref.current remains null)
 
@@ -181,7 +189,7 @@ describe('useClickOutside', () => {
     const { result } = renderHook(() => useClickOutside(mockHandler));
 
     // Attach ref to target element
-    result.current.current = targetElement;
+    setRefCurrent(result.current, targetElement);
 
     // Create a custom event with no target
     const customEvent = new Event('mousedown');

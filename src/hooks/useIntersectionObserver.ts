@@ -4,7 +4,9 @@ export interface UseIntersectionObserverOptions extends IntersectionObserverInit
   freezeOnceVisible?: boolean;
 }
 
-export interface UseIntersectionObserverReturn<T extends HTMLElement = HTMLElement> {
+export interface UseIntersectionObserverReturn<
+  T extends HTMLElement = HTMLElement,
+> {
   ref: (node: T | null) => void;
   isIntersecting: boolean;
   entry?: IntersectionObserverEntry;
@@ -55,7 +57,7 @@ function useIntersectionObserver<T extends HTMLElement = HTMLElement>({
         threshold,
         root,
         rootMargin,
-      },
+      }
     );
 
     observer.observe(node);
