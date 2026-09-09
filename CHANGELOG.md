@@ -1,4 +1,5 @@
-## [1.1.0](https://github.com/yuvrajkarna2717/react-hook-granth/compare/v1.0.2...v1.1.0) (2026-09-08)
+## [1.1.1](https://github.com/yuvrajkarna2717/react-hook-granth/compare/v1.0.2...v1.1.1) (2026-09-09)
+
 
 ### Features
 

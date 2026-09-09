@@ -9,6 +9,8 @@ export interface UseCopyToClipboardOptions {
 export interface UseCopyToClipboardReturn {
   isCopied: boolean;
   copy: (text: string) => Promise<boolean>;
+  /** Read text from the clipboard. Resolves to the text, or `null` on failure. */
+  paste: () => Promise<string | null>;
   reset: () => void;
 }
 
@@ -76,7 +78,23 @@ function useCopyToClipboard(
     [resetTime, onSuccess, onError]
   );
 
-  return { isCopied, copy, reset };
+  const paste = useCallback(async (): Promise<string | null> => {
+    if (!navigator?.clipboard?.readText) {
+      onError?.(new Error('Clipboard read not supported'));
+      return null;
+    }
+
+    try {
+      return await navigator.clipboard.readText();
+    } catch (error) {
+      onError?.(
+        error instanceof Error ? error : new Error('Unknown error occurred')
+      );
+      return null;
+    }
+  }, [onError]);
+
+  return { isCopied, copy, paste, reset };
 }
 
 export default useCopyToClipboard;

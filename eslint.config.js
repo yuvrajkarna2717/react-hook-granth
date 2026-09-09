@@ -39,7 +39,10 @@ export default [
       // TypeScript's own checker handles undefined identifiers and type-only
       // globals (e.g. ScrollBehavior, IntersectionObserverInit); core no-undef
       // produces false positives on typed code.
-      'no-undef': 'off'
+      'no-undef': 'off',
+      // Core no-redeclare flags TS function overload signatures; the
+      // TypeScript compiler validates these correctly.
+      'no-redeclare': 'off'
     },
     settings: {
       react: {

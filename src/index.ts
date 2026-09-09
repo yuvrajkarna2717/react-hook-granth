@@ -51,3 +51,54 @@ export type {
 export { default as useDocumentTitle } from './hooks/useDocumentTitle';
 export { default as useMeasure } from './hooks/useMeasure';
 export type { Bounds } from './hooks/useMeasure';
+
+// Lifecycle & Effect Hooks
+export { default as useUpdateEffect } from './hooks/useUpdateEffect';
+export { default as useInterval } from './hooks/useInterval';
+export { default as useIsMounted } from './hooks/useIsMounted';
+
+// Callback & Value Primitives
+export { default as useLatest } from './hooks/useLatest';
+export { default as useEventCallback } from './hooks/useEventCallback';
+
+// State Helpers
+export { default as useToggle } from './hooks/useToggle';
+export type { UseToggleActions, UseToggleReturn } from './hooks/useToggle';
+
+// Event & Interaction Hooks
+export { default as useEventListener } from './hooks/useEventListener';
+export { default as useHover } from './hooks/useHover';
+export type { UseHoverReturn } from './hooks/useHover';
+export { default as useKeyPress } from './hooks/useKeyPress';
+export type { UseKeyPressOptions } from './hooks/useKeyPress';
+
+// Async Hooks
+export { default as useAsync } from './hooks/useAsync';
+export type { AsyncStatus, UseAsyncReturn } from './hooks/useAsync';
+
+// Collection State Helpers
+export { default as useSet } from './hooks/useSet';
+export type { UseSetActions, UseSetReturn } from './hooks/useSet';
+export { default as useArray } from './hooks/useArray';
+export type { UseArrayActions, UseArrayReturn } from './hooks/useArray';
+export { default as useControllableState } from './hooks/useControllableState';
+export type {
+  UseControllableStateParams,
+  UseControllableStateReturn,
+} from './hooks/useControllableState';
+
+// Async & Data Hooks
+export { default as useFetch } from './hooks/useFetch';
+export type { UseFetchReturn } from './hooks/useFetch';
+export { default as useDebouncedCallback } from './hooks/useDebouncedCallback';
+export type { DebouncedCallback } from './hooks/useDebouncedCallback';
+
+// Additional Browser API Hooks
+export { default as usePageVisibility } from './hooks/usePageVisibility';
+export { default as useOrientation } from './hooks/useOrientation';
+export type { OrientationState } from './hooks/useOrientation';
+export { default as useBattery } from './hooks/useBattery';
+export type { BatteryState } from './hooks/useBattery';
+export { default as useGeolocation } from './hooks/useGeolocation';
+export type { GeolocationState } from './hooks/useGeolocation';
+export { default as useLockBodyScroll } from './hooks/useLockBodyScroll';

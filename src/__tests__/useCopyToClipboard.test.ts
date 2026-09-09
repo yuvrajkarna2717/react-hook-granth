@@ -5,8 +5,10 @@ import useCopyToClipboard from '../hooks/useCopyToClipboard';
 
 // Mock navigator.clipboard
 const mockWriteText = vi.fn();
+const mockReadText = vi.fn();
 const mockClipboard = {
   writeText: mockWriteText,
+  readText: mockReadText,
 };
 
 describe('useCopyToClipboard', () => {
@@ -394,6 +396,57 @@ describe('useCopyToClipboard', () => {
 
       // Function should be different due to dependency change
       expect(result.current.copy).not.toBe(originalCopy);
+    });
+  });
+
+  describe('Paste (clipboard read)', () => {
+    it('reads text from the clipboard', async () => {
+      mockReadText.mockResolvedValue('pasted text');
+      const { result } = renderHook(() => useCopyToClipboard());
+
+      let value: string | null = null;
+      await act(async () => {
+        value = await result.current.paste();
+      });
+
+      expect(value).toBe('pasted text');
+      expect(mockReadText).toHaveBeenCalledTimes(1);
+    });
+
+    it('returns null and calls onError when read is unsupported', async () => {
+      const nav = navigator as { clipboard?: Clipboard };
+      const original = nav.clipboard;
+      delete nav.clipboard;
+
+      const onError = vi.fn();
+      const { result } = renderHook(() => useCopyToClipboard({ onError }));
+
+      let value: string | null = 'x';
+      await act(async () => {
+        value = await result.current.paste();
+      });
+
+      expect(value).toBeNull();
+      expect(onError).toHaveBeenCalledWith(
+        expect.objectContaining({ message: 'Clipboard read not supported' })
+      );
+      nav.clipboard = original;
+    });
+
+    it('returns null and calls onError when read rejects', async () => {
+      mockReadText.mockRejectedValue(new Error('denied'));
+      const onError = vi.fn();
+      const { result } = renderHook(() => useCopyToClipboard({ onError }));
+
+      let value: string | null = 'x';
+      await act(async () => {
+        value = await result.current.paste();
+      });
+
+      expect(value).toBeNull();
+      expect(onError).toHaveBeenCalledWith(
+        expect.objectContaining({ message: 'denied' })
+      );
     });
   });
 });
